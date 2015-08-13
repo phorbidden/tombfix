@@ -1,0 +1,26 @@
+(function() {
+Tombloo.Service.extractors.register({
+	name : 'Photo - twitterOriginalSize',
+	ICON : 'chrome://tombloo/skin/photo.png',
+	URL  : 'http://twitter.com/*',
+	URL  : 'https://twitter.com/*',
+
+	check : function(ctx){
+		if(!ctx.onLink)
+			return false;
+
+		return ctx.href.indexOf('//twitter.com/') > -1;
+	},
+
+	extract : function(ctx){
+		var src = ctx.target.src;
+		src = src.replace( /:(large|orig).*$/, "");
+		src = src.replace( /^https:/, "http:");
+		var ext = src.substr( src.length - 3, 3);
+		//console.log("ext="+ext);
+
+		ctx.target.src = src + ":orig#." + ext;
+		return Tombloo.Service.extractors['Photo'].extract(ctx);
+	},
+}, 'Photo', false);
+})();
